@@ -136,39 +136,20 @@ self.y_deadzone = 15        # Deadzone for analog stick
 - **`pokeball_dashboard.py`** - Real-time data visualization dashboard showing live byte values and interpretations
 - **`pokeball_calibrate.py`** - Calibration utility for finding joystick center position
 - **`pokeball_x_axis_test.py`** - Specialized test for isolating X-axis movement data
-- **`pokeball_analyzer.py`** - Data capture tool that records packets in movement phases
-- **`pokeball_live_debug.py`** - Live debugging viewer for real-time byte monitoring
-- **`pokeball_quick_test.py`** - Simple connection test to verify Pokeball is responding
 
-### Legacy/Development Versions
-- **`pokeball_mouse.py`** - Initial mouse driver attempt (has drift issues)
-- **`pokeball_mouse_v2.py`** - Vertical-only implementation before X-axis solution
-- **`pokeball_mouse_final.py`** - Previous "production" version with X-axis disabled
-- **`pokeball_controller.py`** through **`pokeball_controller_v4.py`** - Early development iterations
-- **`pokeball_simple.py`** - Basic connection and data reading script
-- **`pokeball_debug.py`** - Debug utilities
-- **`pokeball_auto.py`** - Auto-reconnection attempts
-- **`pokeball_scanner.py`** - Bluetooth device scanner
-- **`pokeball_mouse_test.py`** - Early testing script
-- **`test_pokeball.py`** - Unit tests for Pokeball connection
-
-### Data Files
-- **`pokeball_data_*.json`** - Captured movement data from analyzer
-- **`pokeball_x_axis_*.json`** - Isolated X-axis test data captures
-- **`pokeball_calibration.txt`** - Saved calibration values
 
 ## Development Journey
 
-This project involved extensive reverse engineering of the Pokeball Plus BLE protocol. Initial attempts using documented Nintendo Switch controller protocols failed, leading to the discovery that the Pokeball Plus uses a unique encoding scheme. The breakthrough came from visualizing the raw data in real-time and identifying the bit patterns in the low nibble of byte[3].
+This project was an impromptu experiment that was started while searching for a PS4 controller that would work as a bluetooth mouse for the GPi Case 2 (a Raspberry Pi Gameboy).  While digging through through a drawer in my entertainment center i found the old pokeball that my son used to play Pokemon Let's Go (Nintendo Switch 2018).  After a serious of attempts to connect it I realized that it was going to be much more complex than I initially thought.  After a couple of attempts to have Claude Code find the answer itself, i searched and found a few Reddit posts and GitHub repositories of others who had attempted to reverse engineer Nintendo devices.  It was apparent that I was not the only one who was having trouble getting the x-axis to map properly.  There were many attempts to decode the raw bytes, but many involved complex calculations that didn't make sense.  After about 8 hours of different debuggers and tests, I took all of the data I had collected and asked Gemini to investigate and then provide a better debugger.  I took Gemini's response and gave it to Claude Code, and it took the idea for a visual dashboard and improved it to the point that i had something that would provide visual feedback for the different nibbles.  After about 5 minutes of staring at the dashboard while moving the joystick around I noticed that the low nibble of byte[3] was static at 0111 when the joystick was in the nuetral position, and was 0010 or 0011 when pressed left, and when pressed right it was 1100 (or other numbers that were all above 1000). It was at that point that i realized that when it came to x-axis position that the last bit in the nibble was not providing anything meaningful and was the source of all of calculation problems.  To me, this was a perfect example of multi-modal human-ai collaboration to solve a problem.  I worked with Claude to come up with a plan and work towards accomplishing it, then when I got stuck, I used Gemini to be an objective 3rd party to review and provide suggestions, then I had Claude reign the over engineered solution into something a little more human friendly.  It only took 5 minutes of playing around with the dashboard to find the pattern in the low nibble of byte[3]. 
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit pull requests or open issues for bugs and feature requests.
+Contributions are welcome!  While i have the basics down, the actual mouse movement and accuracy can definitely be improved, but I'm wanting to work on other bugs with my Gameboy for now.  Please feel free to submit pull requests or open issues for bugs and feature requests if you have suggestions.
 
 ## Acknowledgments
 
 - Claude
-- Reddit user u/Unity3D community for initial Pokeball Plus reverse engineering work
+- Reddit user u/Unity3D for initial Pokeball Plus reverse engineering work
 - GitHub user dekuNukem Nintendo Switch Reverse Engineering project for protocol insights
 
 ## License
