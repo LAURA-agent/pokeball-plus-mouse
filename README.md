@@ -100,7 +100,7 @@ self.y_deadzone = 15        # Deadzone for analog stick
 |------|---------|------|
 | 0 | Packet counter | Counter |
 | 1 | Button state | Digital (00=none, 01=B, 02=A, 03=both) |
-| 2 | Unused | - |
+| 2 | Unused | - | (also has X-axis info in high nibble, but not needed for this simple implementation)
 | 3 | X-axis in low nibble | Digital (bit pattern) |
 | 4 | Y-axis | Analog (range ~32-192) |
 | 5-16 | Gyro/Accel data | Not implemented |
